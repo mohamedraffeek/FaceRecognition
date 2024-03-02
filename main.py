@@ -1,6 +1,6 @@
 import DatasetSplitter as ds
-import LDA
+from LDA import LDA
 
 trainingData, trainingLabels, testingData, testingLabels = ds.splitData()
 
-LDA.execute(trainingData)
+LDA(trainingData, trainingLabels, testingData, testingLabels)
