@@ -1,4 +1,7 @@
+# Ignore this if we use the .ipynb file
+
 import numpy as np
+import scipy as sp
 from sklearn.metrics import accuracy_score
 from sklearn.neighbors import KNeighborsClassifier
 
@@ -8,23 +11,32 @@ def LDA(trainingData, trainingLabels, testingData, testingLabels):
     classMatrices = np.split(matrix, indices_or_sections=40)
 
     # Compute class means
-    classMeans = getClassMeans(classMatrices)
+    classMeans = np.mean(classMatrices, axis=1)
     
     # Compute the overall sample mean
     overallMean = np.mean(matrix, axis=0)
 
     # Compute the between-class scatter matrix
     Sb = getBetweenClass(classMeans, overallMean)
+    print("between: ", Sb)
 
     # Centering each class
     centeredClassMatrices = getCenteredClasses(classMatrices, classMeans)
 
     # Compute the within-class scatter matrix
     S = getWihinClass(overallMean, centeredClassMatrices)
+    print("within: ", S)
+    
+    # Check if S is singular
+    isSingular = np.linalg.det(S) == 0
+    if isSingular:
+        print("S is singular")
+    else:
+        print("S is not singular")
 
     # Computing the inverse of S
     print("Computing S inverse")
-    SInverse = np.linalg.inv(S)
+    SInverse = sp.linalg.pinv(S)
 
     # Computing the S inverse * Sb matrix
     print("Computing S inverse * Sb")
@@ -33,18 +45,18 @@ def LDA(trainingData, trainingLabels, testingData, testingLabels):
     # Computing eigenvalues and vectors
     print("Computing eigenvalues and vectors")
     eigenValues, eigenVectors = np.linalg.eig(SInv_Sb)
-    eigenValues = np.real(eigenValues)
-    eigenVectors = np.real(eigenVectors)
+    print("eigenvectors: ", eigenVectors)
 
     # Sorting to find dominant vectors
     sortedIndecies = np.argsort(eigenValues)[::-1]
     sortedEigenVectors = eigenVectors[:,sortedIndecies]
-    U = sortedEigenVectors[:,:39]
+    U = np.real(sortedEigenVectors[:,:39])
+    print("projection matr: ", U)
 
     # Projecting data
     print("Projecting")
-    projectedTrainingData = np.dot(trainingData - overallMean, U)
-    projectedTestingData = np.dot(testingData - overallMean, U)
+    projectedTrainingData = np.dot(trainingData , U)
+    projectedTestingData = np.dot(testingData , U)
 
     # Classification
     print("Classifying")
@@ -53,15 +65,8 @@ def LDA(trainingData, trainingLabels, testingData, testingLabels):
     prediction = classifier.predict(projectedTestingData)
     accuracy = accuracy_score(testingLabels, prediction)
 
-    print(accuracy * 100)
-    print("Done")
-
-def getClassMeans(classMatrices):
-    classMeans = []
-    print("Computing class means")
-    for classMatrix in classMatrices:
-        classMeans.append(np.mean(classMatrix, axis=0))
-    return classMeans
+    print ("Accuracy = ", accuracy * 100)
+    print("Done")    
 
 
 def getBetweenClass(classMeans, overallMean):
