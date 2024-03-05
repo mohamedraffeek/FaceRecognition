@@ -23,10 +23,10 @@ def differentSplitData():
     testingData = []
     trainingLabels = []
     testingLabels = []
-    for i in range(0, len(dataMatrix), 10): # Jump by 10 each iteration
+    for i in range(0, len(dataMatrix), 10):  # Jump by 10 each iteration
         for j in range(10):
             ind = i + j
-            if ind < 7:
+            if j < 7:
                 trainingData.append(dataMatrix[ind])
                 trainingLabels.append(labelVector[ind])
             else:
