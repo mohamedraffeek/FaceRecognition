@@ -1,4 +1,8 @@
-import DatasetSplitter as ds
+# Ignore this if we use the .ipynb file
 
-trainingData, trainingLabels, testingData, testingLabels = ds.splitData()
-print(trainingLabels)
+import DatasetSplitter as ds
+from LDA import LDA
+
+trainingData, trainingLabels, testingData, testingLabels = ds.splitData2()
+
+LDA(trainingData, trainingLabels, testingData, testingLabels)
