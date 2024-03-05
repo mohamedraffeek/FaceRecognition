@@ -12,7 +12,8 @@ labelVectorNonFaces = []
 # The path for the 'archive' directory we downloaded, 
 # that is, the directory which contains sub-directories named from s1 to s40
 mainDirectory = "C:/Users/moham/Desktop/archive"
-NonFacesDirectory = "C:/Users/moham/Desktop/Scaled nonfaces"
+NonFacesDirectory = 'D:\\CSED\\semester-6\\pattern-recognetion\\labs\\lab1-faceRecognition\\faces'
+# mainDirectory = 'D:\\CSED\\semester-6\\pattern-recognetion\\labs\\lab1-faceRecognition\\faces'
 
 def generateData():
     # Iterate the sub-directories, and load each set of images as 10 (number of images for each subject) 
@@ -29,6 +30,7 @@ def generateData():
 def generateDataNonFace():  # 400 faces and 800 nonfaces
     # Iterate the sub-directories, and load each set of images as 10 (number of images for each subject) 
     # 1-d vectors (using np.ravel) into the data matrix
+    global NonFacesDirectory
     for subDirectory in os.listdir(mainDirectory):
         path = os.path.join(mainDirectory, subDirectory)
         if os.path.isdir(path):
