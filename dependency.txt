@@ -2,3 +2,6 @@
 sudo apt install python3-opencv
 #install scikit-learn
 pip install scikit-learn
+
+# to pdf
+jupyter nbconvert --to pdf pca.ipynb
